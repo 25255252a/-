@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Добавить заметку</title>
+<style>
+body { background: #1e1e1e; color: white; font-family: Arial; text-align: center; padding-top: 80px; }
+input, textarea { padding: 10px; width: 300px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccccff; background: #2a2a2a; color: white; }
+button { padding: 12px 25px; margin: 15px; border: 2px solid #ccccff; background: transparent; color: #ccccff; cursor: pointer; transition: 0.3s; border-radius: 6px; }
+button:hover { box-shadow: inset 0 0 0 100px #00bcd4; color: #1f1f1f; }
+    html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+
+.glow-on-hover {
+    width: 220px;
+    height: 50px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+.glow-on-hover:active {
+    color: #000
+}
+
+.glow-on-hover:active:after {
+    background: transparent;
+}
+
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+</style>
+</head>
+<body>
+
+<h1>Добавить заметку</h1>
+
+<input type="text" id="title" placeholder="Название"><br>
+<textarea id="content" placeholder="Описание"></textarea><br>
+<button class="glow-on-hover" type="button">Добавить</button>
+<button class="glow-on-hover" type="button">На главную</button>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+async function addNote() {
+    const title = document.getElementById("title").value;
+    const content = document.getElementById("content").value;
+    if (!title || !content) { alert("Заполните все поля"); return; }
+
+    await fetch(`${API}/notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content })
+    });
+
+    alert("Заметка добавлена!");
+    location.href = "/result";
+}
+</script>
+
+</body>
+</html>
